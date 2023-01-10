@@ -4,7 +4,7 @@ import { Content } from "antd/es/layout/layout";
 
 import TablePagination from "./TablePagination";
 
-export default function UsersBlock() {
+export default function UsersComponent() {
   return (
     <Content
       style={{
@@ -12,7 +12,7 @@ export default function UsersBlock() {
         minHeight: 280,
       }}
     >
-<TablePagination/>      
+      <TablePagination />
     </Content>
   );
 }

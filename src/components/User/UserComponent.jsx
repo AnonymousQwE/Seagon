@@ -1,36 +1,35 @@
 import React, { useEffect, useState } from "react";
 
 import { Avatar, message } from "antd";
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined } from "@ant-design/icons";
 
 import { useDispatch, useSelector } from "react-redux";
-import { clearError, clearMessage } from "../../slices/currentUserSlice";
+import { clearNotify } from "../../slices/currentUserSlice";
 
 import UserModal from "./UserModal";
 
 export default function UserComponent() {
   const dispatch = useDispatch();
-  const { error, status, completeMessage, currentUser } = useSelector(
+  const { notify, status, currentUser } = useSelector(
     (state) => state.currentUser
   );
   const [messageApi, contextHolder] = message.useMessage();
 
-  function statusChangedHandler() {
-    const message =
-      status === "rejected"
-        ? { type: "error", content: error }
-        : status === "loaded"
-          ? { type: "success", content: completeMessage }
-          : {};
+  function statusChangedHandler(notify) {
+    const errorNotify = { type: "error", content: notify?.error };
+    const successNotify = { type: "success", content: notify?.complete };
 
-    messageApi.open(message);
-    dispatch(clearMessage());
-    dispatch(clearError());
+    if (notify.error) {
+      messageApi.open(errorNotify);
+    } else if (notify.complete) {
+      messageApi.open(successNotify);
+    }
+    dispatch(clearNotify());
   }
 
   useEffect(() => {
-    (error || completeMessage) && statusChangedHandler();
-  }, [error, completeMessage]);
+    statusChangedHandler(notify);
+  }, [status]);
 
   const [open, setOpen] = useState(false);
   const showUserModal = () => {

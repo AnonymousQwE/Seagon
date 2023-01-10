@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Button, Popover, Space, Table, Tag } from "antd";
-
 
 const columns = [
   {
@@ -32,8 +31,6 @@ const columns = [
               {category}
             </Tag>
           </Popover>
-
-
         }
       </>
     ),
@@ -43,7 +40,12 @@ const columns = [
     key: "action",
     render: (_, record) => (
       <Space size="middle">
-        <Button key={record.key} size="small">
+        <Button
+          onClick={() => {
+          }}
+          key={record.key}
+          size="small"
+        >
           Edit
         </Button>
       </Space>
@@ -51,39 +53,20 @@ const columns = [
   },
 ];
 
-// const products = [
-//   {
-//     key: "key1",
-//     title: "Product Title",
-//     cost: 20,
-//     price: 120000,
-//     tags: ["Пневмораспределители", "Денис 121 Магазин"],
-//   },
-//   {
-//     key: "key2",
-//     title: "Product Title",
-//     cost: 30,
-//     price: 130000,
-//     tags: ["Пневмораспределители", "Денис 121 Магазин"],
-//   },
-//   {
-//     key: "key3",
-//     title: "Product Title",
-//     cost: 40,
-//     price: 140000,
-//     tags: ["Пневмораспределители", "Денис 121 Магазин"],
-//   },
-// ];
-
 const AdminTable = ({ products, rowSelection }) => {
-
+  const [current, setCurrent] = useState(1);
   return (
     <>
       <Table
         rowSelection={rowSelection}
         columns={columns}
         dataSource={products}
-        pagination={{ current: 1, pageSize: 5 }}
+        pagination={{
+          total: products.lenght,
+          showTotal: (total) => `Total ${total} products`,
+          defaultPageSize: 5,
+          defaultCurrent: 1,
+        }}
         showSizeChanger={false}
       />
     </>

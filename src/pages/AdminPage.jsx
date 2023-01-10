@@ -7,7 +7,8 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 import ProductsComponent from "../components/Admin/ProductsTab/ProductsComponent";
 import AdminMenu from "../components/Admin/AdminMenu";
-import UsersBlock from "../components/Admin/UsersBlock";
+import UsersComponent from "../components/Admin/UsersTab/UsersComponent";
+import Typography from "antd/es/typography/Typography";
 
 export default function AdminPage() {
   const {
@@ -20,15 +21,6 @@ export default function AdminPage() {
         padding: "0 50px",
       }}
     >
-      <Breadcrumb
-        style={{
-          margin: "16px 0",
-        }}
-      >
-        <Breadcrumb.Item>Home</Breadcrumb.Item>
-        <Breadcrumb.Item>List</Breadcrumb.Item>
-        <Breadcrumb.Item>App</Breadcrumb.Item>
-      </Breadcrumb>
       <Layout
         style={{
           padding: "24px 0",
@@ -40,7 +32,7 @@ export default function AdminPage() {
           <Route index element={<Navigate to="products" />} />
           <Route path="categories" element={<ProductsComponent />} />
           <Route path="products" element={<ProductsComponent />} />
-          <Route path="users" element={<UsersBlock />} />
+          <Route path="users" element={<UsersComponent />} />
         </Routes>
       </Layout>
     </Content>

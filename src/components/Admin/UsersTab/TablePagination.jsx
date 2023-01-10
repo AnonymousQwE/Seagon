@@ -29,11 +29,12 @@ const columns = [
     dataIndex: "email",
   },
 ];
-const getRandomuserParams = (params) => ({
+const getRandomuserParams = (params) => {
+  return ({
   results: params.pagination?.pageSize,
   page: params.pagination?.current,
   ...params,
-});
+})};
 const TablePagination = () => {
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);

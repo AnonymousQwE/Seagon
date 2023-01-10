@@ -8,27 +8,23 @@ import {
   serverRegisterUser,
 } from "../hooks/authHook";
 
-
 const currentUserSlice = createSlice({
   name: "currentUser",
   initialState: {
     CurrentUser: {},
     status: null,
-    error: null,
-    completeMessage: null,
+    notify: {
+    },
   },
   reducers: {
     serverLogoutUser: (state) => {
       Parse.User.logOut();
       state.currentUser = null;
       state.status = "loaded";
-      state.completeMessage = "LogOut Complete";
+      state.notify.complete = "LogOut Complete";
     },
-    clearError: (state) => {
-      state.error = null;
-    },
-    clearMessage: (state) => {
-      state.completeMessage = null;
+    clearNotify: (state) => {
+      state.notify = {};
     },
   },
   extraReducers: (builder) => {
@@ -37,13 +33,13 @@ const currentUserSlice = createSlice({
     });
     builder.addCase(serverLoginUser.fulfilled, (state, action) => {
       state.currentUser = action.payload;
-      state.completeMessage =
+      state.notify.complete =
         "You loggined from username: " + action.payload.username;
       state.status = "loaded";
     });
     builder.addCase(serverLoginUser.rejected, (state, action) => {
       state.status = "rejected";
-      state.error = action.payload;
+      state.notify.error = action.payload;
     });
 
     builder.addCase(serverRegisterUser.pending, (state, action) => {
@@ -51,13 +47,13 @@ const currentUserSlice = createSlice({
     });
     builder.addCase(serverRegisterUser.fulfilled, (state, action) => {
       state.currentUser = action.payload;
-      state.completeMessage =
+      state.notify.complete =
         "You registered from username: " + action.payload.username;
       state.status = "loaded";
     });
     builder.addCase(serverRegisterUser.rejected, (state, action) => {
       state.status = "rejected";
-      state.error = action.payload;
+      state.notify.error = action.payload;
     });
 
     builder.addCase(serverCurrentUser.pending, (state, action) => {
@@ -69,12 +65,11 @@ const currentUserSlice = createSlice({
     });
     builder.addCase(serverCurrentUser.rejected, (state, action) => {
       state.status = "rejected";
-      state.error = action.payload;
+      state.notify.error = action.payload;
     });
   },
 });
 
-export const { serverLogoutUser, clearError, clearMessage } =
-  currentUserSlice.actions;
+export const { serverLogoutUser, clearNotify } = currentUserSlice.actions;
 
 export default currentUserSlice.reducer;

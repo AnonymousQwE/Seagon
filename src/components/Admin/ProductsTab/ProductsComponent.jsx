@@ -7,9 +7,11 @@ import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import AdminTable from "../AdminTable";
 import ProductCreateModal from "./ProductCreateModal";
 import { useDispatch, useSelector } from "react-redux";
-import { serverProductDelete, serverProductsGet } from "../../../hooks/productsHook";
-
-
+import {
+  serverProductDelete,
+  serverProductsGet,
+} from "../../../hooks/productsHook";
+import { async } from "parse/dist/parse";
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -26,20 +28,18 @@ const rowSelection = {
   }),
 };
 
-
-
 export default function ProductsComponent() {
   const [loading, setLoading] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.products.products);
+  const { products } = useSelector((state) => state.products);
 
   useEffect(() => {
-    dispatch(serverProductsGet())
-  }, [products])
+    dispatch(serverProductsGet());
+  }, [loading]);
 
-
+  console.log(products);
 
   const onSelectChange = (newSelectedRowKeys) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
@@ -53,15 +53,16 @@ export default function ProductsComponent() {
 
   const setLoadedHandler = (status) => {
     setLoading(status);
-  }
+  };
 
-
-  const deleteHandle = () => {
-    setLoadedHandler(true)
-    selectedRowKeys.map((key) => {
-      dispatch(serverProductDelete({ key, setLoadedHandler }))
-    })
-    setLoadedHandler(false)
+  const deleteHandle = async () => {
+    setLoadedHandler(true);
+    selectedRowKeys.map(async (key) => {
+     await dispatch(serverProductDelete({ key, setLoading }));
+    });
+    setLoadedHandler(false);
+    setSelectedRowKeys([]);
+    
   };
 
   //MODAL
@@ -70,9 +71,6 @@ export default function ProductsComponent() {
   const showModal = () => {
     setOpen(true);
   };
-
-
-
 
   return (
     <Content
@@ -92,7 +90,9 @@ export default function ProductsComponent() {
           />
           <Button
             danger
-            onClick={deleteHandle}
+            onClick={() => {
+              deleteHandle(setLoadedHandler);
+            }}
             disabled={!hasSelected}
             loading={loading}
             type="primary"

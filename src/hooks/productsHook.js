@@ -4,73 +4,68 @@ import Parse from "parse/dist/parse.js";
 export const serverProductsGet = createAsyncThunk(
   "products/serverProductsGet",
   async (_, { rejectWithValue }) => {
-    const productsQuery = new Parse.Query('Products');
-    const categoryQuery = new Parse.Query('Category');
+    const productsQuery = new Parse.Query("Products");
+    const categoryQuery = new Parse.Query("Category");
     try {
       let serverProducts = await productsQuery.find();
       let serverCategory = await categoryQuery.find();
-      let categorys = []
-      let products = []
+      let categoryList = [];
+      let products = [];
 
       serverCategory.map((serverCategory) => {
         let cat = {
           id: serverCategory.id,
-          title: serverCategory.attributes.title
-        }
-        categorys.push(cat)
-      })
+          title: serverCategory.attributes.title,
+        };
+        categoryList.push(cat);
+        return categoryList;
+      });
       serverProducts.map((serverProduct) => {
-        const { category, createdAt, updatedAt, ...product } = serverProduct.attributes
-        product.category = serverProduct.attributes.category?.id
-        product.id = serverProduct.id
-        product.key = serverProduct.id
-        products.push(product)
-      })
-      return { products, categorys };
+        const { category, createdAt, updatedAt, ...product } =
+          serverProduct.attributes;
+        product.category = serverProduct.attributes.category?.id;
+        product.id = serverProduct.id;
+        product.key = serverProduct.id;
+        products.push(product);
+        return products;
+      });
+      return { products, categoryList };
     } catch (error) {
       return rejectWithValue(error);
-    };
+    }
   }
 );
-
 
 export const serverProductCreate = createAsyncThunk(
   "products/serverProductCreate",
   async ({ title, price, amount }, { rejectWithValue }) => {
-    let Product = new Parse.Object('Products');
-    Product.set('title', title);
-    Product.set('price', price);
-    Product.set('amount', amount);
+    let Product = new Parse.Object("Products");
+    Product.set("title", title);
+    Product.set("price", price);
+    Product.set("amount", amount);
     try {
       await Product.save();
-      console.log(Product)
-      const { title } = Product
-      return { title }
-      return
+      const { title } = Product;
+      return { title };
     } catch (error) {
-      return rejectWithValue(alert)
-    };
+      return rejectWithValue(alert);
+    }
   }
 );
 
-
 export const serverProductDelete = createAsyncThunk(
   "products/serverProductDelete",
-  async ({ key, setLoadedHandler }, { rejectWithValue }) => {
-
-
-    const Product = new Parse.Object('Products');
-    Product.set('objectId', key);
+  async ({ key, setLoading }, { rejectWithValue }) => {
+    const Product = new Parse.Object("Products");
+    Product.set("objectId", key);
     try {
       await Product.destroy();
-      setLoadedHandler(false)
-      return true;
+      setLoading(false);
+      return key;
     } catch (error) {
-      setLoadedHandler(false)
+      setLoading(false);
       return rejectWithValue(error);
-    };
-
-
+    }
   }
 );
 export const serverProductModify = createAsyncThunk(
