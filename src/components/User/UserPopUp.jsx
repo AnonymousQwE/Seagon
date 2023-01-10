@@ -7,6 +7,7 @@ import { serverLogoutUser } from "../../slices/currentUserSlice";
 
 import UserAutorization from "./UserAutorization";
 import UserRegistration from "./UserRegistration";
+import UserProfile from "./UserProfile";
 
 export default function UserPopUp({ onClose, open }) {
   const dispatch = useDispatch();
@@ -37,15 +38,15 @@ export default function UserPopUp({ onClose, open }) {
                 popUpType === "Login"
                   ? setPopUpType("Registration")
                   : popUpType === "Registration"
-                  ? setPopUpType("Login")
-                  : userLogOutHandler();
+                    ? setPopUpType("Login")
+                    : userLogOutHandler();
               }}
             >
               {popUpType === "Login"
                 ? "Registration"
                 : popUpType === "Registration"
-                ? "Login"
-                : "LogOut"}
+                  ? "Login"
+                  : "LogOut"}
             </Button>
           </Space>
         }
@@ -55,7 +56,7 @@ export default function UserPopUp({ onClose, open }) {
         ) : popUpType === "Registration" ? (
           <UserRegistration />
         ) : (
-          "User Profile"
+          <UserProfile />
         )}
       </Drawer>
     </>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Avatar, message } from "antd";
+import { UserOutlined } from '@ant-design/icons';
 
 import { useDispatch, useSelector } from "react-redux";
 import { clearError, clearMessage } from "../../slices/currentUserSlice";
@@ -19,8 +20,8 @@ export default function UserComponent() {
       status === "rejected"
         ? { type: "error", content: error }
         : status === "loaded"
-        ? { type: "success", content: completeMessage }
-        : {};
+          ? { type: "success", content: completeMessage }
+          : {};
 
     messageApi.open(message);
     dispatch(clearMessage());
@@ -44,7 +45,7 @@ export default function UserComponent() {
     <>
       {contextHolder}
       <Avatar onClick={showUserPopUp} size={50} className="headerUserIcon">
-        {currentUser ? currentUser.username : "LOGIN"}
+        {currentUser ? currentUser.username : <UserOutlined />}
       </Avatar>
       <UserPopUp open={open} onClose={onClose} />
     </>

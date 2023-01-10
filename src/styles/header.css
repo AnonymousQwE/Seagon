@@ -9,6 +9,7 @@
   text-align: center;
   justify-content: center;
 }
+
 .headerNavItem {
   height: 1rem;
   font-size: 20px;
@@ -22,10 +23,10 @@
   align-items: center;
 }
 
-.headerUserIcon{
+.headerUserIcon {
   cursor: pointer;
-  background-color: antiquewhite;
-  color: #333;
+  background-color: white;
+  color: rgba(0, 0, 0, 0.88);
   font-weight: bold;
 
 }
