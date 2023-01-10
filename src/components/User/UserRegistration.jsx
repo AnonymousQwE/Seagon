@@ -4,7 +4,7 @@ import { Button, Form, Input } from "antd";
 
 import { useDispatch } from "react-redux";
 
-import { serverRegisterUser } from "../../hooks/authHooks";
+import { serverRegisterUser } from "../../hooks/authHook";
 
 export default function UserRegistration() {
   const dispatch = useDispatch();

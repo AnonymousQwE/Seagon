@@ -1,0 +1,116 @@
+import React, { useEffect, useState } from "react";
+
+import { Content } from "antd/es/layout/layout";
+import { Button, List } from "antd";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+
+import AdminTable from "../AdminTable";
+import ProductCreateModal from "./ProductCreateModal";
+import { useDispatch, useSelector } from "react-redux";
+import { serverProductDelete, serverProductsGet } from "../../../hooks/productsHook";
+
+
+
+const rowSelection = {
+  onChange: (selectedRowKeys, selectedRows) => {
+    console.log(
+      `selectedRowKeys: ${selectedRowKeys}`,
+      "selectedRows: ",
+      selectedRows
+    );
+  },
+  getCheckboxProps: (record) => ({
+    disabled: record.name === "Disabled User",
+    // Column configuration not to be checked
+    name: record.name,
+  }),
+};
+
+
+
+export default function ProductsComponent() {
+  const [loading, setLoading] = useState(false);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.products.products);
+
+  useEffect(() => {
+    dispatch(serverProductsGet())
+  }, [products])
+
+
+
+  const onSelectChange = (newSelectedRowKeys) => {
+    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+  const hasSelected = selectedRowKeys.length > 0;
+
+  const setLoadedHandler = (status) => {
+    setLoading(status);
+  }
+
+
+  const deleteHandle = () => {
+    setLoadedHandler(true)
+    selectedRowKeys.map((key) => {
+      dispatch(serverProductDelete({ key, setLoadedHandler }))
+    })
+    setLoadedHandler(false)
+  };
+
+  //MODAL
+
+  const [open, setOpen] = useState(false);
+  const showModal = () => {
+    setOpen(true);
+  };
+
+
+
+
+  return (
+    <Content
+      style={{
+        padding: "0 24px",
+        minHeight: 280,
+      }}
+    >
+      <List itemLayout="horizontal" style={{ marginBottom: 15 }}>
+        <List.Item style={{ justifyContent: "flex-start", gap: 10 }}>
+          <Button
+            type="primary"
+            shape="round"
+            icon={<PlusOutlined />}
+            size={"default"}
+            onClick={showModal}
+          />
+          <Button
+            danger
+            onClick={deleteHandle}
+            disabled={!hasSelected}
+            loading={loading}
+            type="primary"
+            shape="round"
+            icon={<DeleteOutlined />}
+            size={"default"}
+          />
+          <span
+            style={{
+              marginLeft: 8,
+            }}
+          >
+            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
+          </span>
+        </List.Item>
+        <ProductCreateModal setOpen={setOpen} open={open} />
+      </List>
+      <AdminTable products={products} rowSelection={rowSelection} />
+    </Content>
+  );
+}

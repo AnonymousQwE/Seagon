@@ -6,7 +6,7 @@ import {
   serverCurrentUser,
   serverLoginUser,
   serverRegisterUser,
-} from "../hooks/authHooks";
+} from "../hooks/authHook";
 
 
 const currentUserSlice = createSlice({

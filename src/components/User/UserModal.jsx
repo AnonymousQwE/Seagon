@@ -9,24 +9,24 @@ import UserAutorization from "./UserAutorization";
 import UserRegistration from "./UserRegistration";
 import UserProfile from "./UserProfile";
 
-export default function UserPopUp({ onClose, open }) {
+export default function UserModal({ onClose, open }) {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.currentUser.currentUser);
 
-  const [popUpType, setPopUpType] = useState("Login");
+  const [modalType, setModalType] = useState("Login");
 
   const userLogOutHandler = () => {
     dispatch(serverLogoutUser());
   };
 
   useEffect(() => {
-    currentUser ? setPopUpType("UserPanel") : setPopUpType("Login");
+    currentUser ? setModalType("UserPanel") : setModalType("Login");
   }, [currentUser]);
 
   return (
     <>
       <Drawer
-        title={popUpType}
+        title={modalType}
         placement="right"
         size={"default"}
         onClose={onClose}
@@ -35,25 +35,25 @@ export default function UserPopUp({ onClose, open }) {
           <Space>
             <Button
               onClick={() => {
-                popUpType === "Login"
-                  ? setPopUpType("Registration")
-                  : popUpType === "Registration"
-                    ? setPopUpType("Login")
+                modalType === "Login"
+                  ? setModalType("Registration")
+                  : modalType === "Registration"
+                    ? setModalType("Login")
                     : userLogOutHandler();
               }}
             >
-              {popUpType === "Login"
+              {modalType === "Login"
                 ? "Registration"
-                : popUpType === "Registration"
+                : modalType === "Registration"
                   ? "Login"
                   : "LogOut"}
             </Button>
           </Space>
         }
       >
-        {popUpType === "Login" ? (
+        {modalType === "Login" ? (
           <UserAutorization />
-        ) : popUpType === "Registration" ? (
+        ) : modalType === "Registration" ? (
           <UserRegistration />
         ) : (
           <UserProfile />

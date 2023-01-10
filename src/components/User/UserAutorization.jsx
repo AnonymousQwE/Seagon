@@ -4,7 +4,7 @@ import { Button, Form, Input } from "antd";
 
 import { useDispatch } from "react-redux";
 
-import { serverLoginUser } from "../../hooks/authHooks";
+import { serverLoginUser } from "../../hooks/authHook";
 
 export default function UserAutorization() {
   const dispatch = useDispatch();

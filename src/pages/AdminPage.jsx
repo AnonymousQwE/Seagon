@@ -5,7 +5,7 @@ import { Content } from "antd/es/layout/layout";
 
 import { Navigate, Route, Routes } from "react-router-dom";
 
-import ProductsBlock from "../components/Admin/ProductsBlock";
+import ProductsComponent from "../components/Admin/ProductsTab/ProductsComponent";
 import AdminMenu from "../components/Admin/AdminMenu";
 import UsersBlock from "../components/Admin/UsersBlock";
 
@@ -38,8 +38,8 @@ export default function AdminPage() {
         <AdminMenu />
         <Routes>
           <Route index element={<Navigate to="products" />} />
-          <Route path="categories" element={<ProductsBlock />} />
-          <Route path="products" element={<ProductsBlock />} />
+          <Route path="categories" element={<ProductsComponent />} />
+          <Route path="products" element={<ProductsComponent />} />
           <Route path="users" element={<UsersBlock />} />
         </Routes>
       </Layout>

@@ -6,7 +6,7 @@ import { UserOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from "react-redux";
 import { clearError, clearMessage } from "../../slices/currentUserSlice";
 
-import UserPopUp from "./UserPopUp";
+import UserModal from "./UserModal";
 
 export default function UserComponent() {
   const dispatch = useDispatch();
@@ -15,7 +15,7 @@ export default function UserComponent() {
   );
   const [messageApi, contextHolder] = message.useMessage();
 
-  function statusChangedHandler(status) {
+  function statusChangedHandler() {
     const message =
       status === "rejected"
         ? { type: "error", content: error }
@@ -29,11 +29,11 @@ export default function UserComponent() {
   }
 
   useEffect(() => {
-    (error || completeMessage) && statusChangedHandler(status);
+    (error || completeMessage) && statusChangedHandler();
   }, [error, completeMessage]);
 
   const [open, setOpen] = useState(false);
-  const showUserPopUp = () => {
+  const showUserModal = () => {
     setOpen(true);
   };
 
@@ -44,10 +44,10 @@ export default function UserComponent() {
   return (
     <>
       {contextHolder}
-      <Avatar onClick={showUserPopUp} size={50} className="headerUserIcon">
+      <Avatar onClick={showUserModal} size={50} className="headerUserIcon">
         {currentUser ? currentUser.username : <UserOutlined />}
       </Avatar>
-      <UserPopUp open={open} onClose={onClose} />
+      <UserModal open={open} onClose={onClose} />
     </>
   );
 }

@@ -13,7 +13,7 @@ import MainPage from "./pages/MainPage";
 import AdminPage from "./pages/AdminPage";
 import SettingPage from "./pages/SettingPage";
 
-import { serverCurrentUser } from "./hooks/authHooks";
+import { serverCurrentUser } from "./hooks/authHook";
 import {
   PARSE_APPLICATION_ID,
   PARSE_HOST_URL,
