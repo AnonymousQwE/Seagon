@@ -1,0 +1,31 @@
+.headerMenu {
+  /* padding: 4px; */
+  align-items: center;
+  justify-content: center;
+  max-height: 1rem;
+}
+
+.ant-menu-title-content {
+  text-align: center;
+  justify-content: center;
+}
+.headerNavItem {
+  height: 1rem;
+  font-size: 20px;
+}
+
+.headerLogo {
+  display: flex;
+  text-align: center;
+  font-weight: bold;
+  font-size: 30px;
+  align-items: center;
+}
+
+.headerUserIcon{
+  cursor: pointer;
+  background-color: antiquewhite;
+  color: #333;
+  font-weight: bold;
+
+}
