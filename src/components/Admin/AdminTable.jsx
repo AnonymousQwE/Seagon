@@ -6,10 +6,16 @@ import { useSelector } from "react-redux";
 const AdminTable = ({ products, rowSelection }) => {
   const { categoryList } = useSelector((state) => state.products);
 
-
   function currentCategory(catId) {
     const currentCat = categoryList.filter((cat) => cat.id == catId);
     return currentCat ? currentCat[0]?.title : catId;
+  }
+
+  function createFiltersCategory() {
+    const newCat = categoryList.map((cat) => {
+      return { text: cat.title, value: cat.id };
+    });
+    return newCat;
   }
 
   const columns = [
@@ -17,21 +23,29 @@ const AdminTable = ({ products, rowSelection }) => {
       title: "Title",
       dataIndex: "title",
       key: "title",
+      sorter: true,
     },
     {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
+      sorter: (a, b) => a.amount - b.amount,
+      defaultSortOrder: "descend",
     },
     {
       title: "Price",
       dataIndex: "price",
       key: "price",
+      sorter: (a, b) => a.price - b.price,
+      defaultSortOrder: "descend",
     },
     {
       title: "Category",
       key: "category",
       dataIndex: "category",
+      filters: createFiltersCategory(),
+      onFilter: (value, record) => value === record.category,
+
       render: (_, { category }) => (
         <>
           {
@@ -40,7 +54,9 @@ const AdminTable = ({ products, rowSelection }) => {
                 color={
                   currentCategory(category) === "Пневмораспределители"
                     ? "blue"
-                    : currentCategory(category) === "Пневмоцилиндры" ? "cyan" : "none"
+                    : currentCategory(category) === "Пневмоцилиндры"
+                    ? "cyan"
+                    : "none"
                 }
                 style={{ cursor: "pointer" }}
               >

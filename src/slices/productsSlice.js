@@ -39,6 +39,7 @@ const productsSlice = createSlice({
     });
     builder.addCase(serverProductCreate.rejected, (state, action) => {
       state.status = "rejected";
+      console.log(action.payload)
       state.notify.error = action.payload;
     });
 

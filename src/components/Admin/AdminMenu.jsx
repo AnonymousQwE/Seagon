@@ -16,9 +16,6 @@ export default function AdminMenu() {
 
   return (
     <Sider
-      style={{
-        background: colorBgContainer,
-      }}
       width={200}
     >
       <Menu

@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Modal, Space } from "antd";
+import { Button, Form, Input, Modal, Select, Space } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { serverProductCreate } from "../../../hooks/productsHook";
 
 export default function ProductCreateModal({ open, setOpen }) {
   const dispatch = useDispatch();
+  const { categoryList } = useSelector((state) => state.products);
 
   const onFinish = async ({ products }) => {
-    console.log(products);
     setConfirmLoading(true);
     await products.map(async (product) => {
       await dispatch(serverProductCreate(product));
@@ -31,6 +31,7 @@ export default function ProductCreateModal({ open, setOpen }) {
   return (
     <>
       <Modal
+        width={1000}
         title="Create New Products"
         open={open}
         onOk={handleOk}
@@ -69,6 +70,23 @@ export default function ProductCreateModal({ open, setOpen }) {
                     </Form.Item>
                     <Form.Item {...restField} name={[name, "amount"]}>
                       <Input type="number" placeholder="Amount" />
+                    </Form.Item>
+                    <Form.Item initialValue={categoryList[0].id}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please choose category!",
+                        },
+                      ]}
+                      name={[name, "category"]}
+                    >
+                      <Select>
+                        {categoryList.map((cat) => (
+                          <Select.Option key={cat.id} value={cat.id}>
+                            {cat.title}
+                          </Select.Option>
+                        ))}
+                      </Select>
                     </Form.Item>
                     <MinusCircleOutlined
                       onClick={() => {

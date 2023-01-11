@@ -39,10 +39,13 @@ export const serverProductsGet = createAsyncThunk(
 export const serverProductCreate = createAsyncThunk(
   "products/serverProductCreate",
   async (product, { rejectWithValue }) => {
+    let Category = new Parse.Object("Category");
+    Category.set("objectId", product.category);
     let Product = new Parse.Object("Products");
     Product.set("title", product.title);
     Product.set("price", +product.price);
     Product.set("amount", +product.amount);
+    Product.set("category", Category);
     try {
       await Product.save();
       product.key = Product.id;
