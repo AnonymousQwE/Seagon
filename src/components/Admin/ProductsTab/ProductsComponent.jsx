@@ -11,26 +11,10 @@ import {
   serverProductDelete,
   serverProductsGet,
 } from "../../../hooks/productsHook";
-import { async } from "parse/dist/parse";
-
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
-  },
-  getCheckboxProps: (record) => ({
-    disabled: record.name === "Disabled User",
-    // Column configuration not to be checked
-    name: record.name,
-  }),
-};
 
 export default function ProductsComponent() {
   const [loading, setLoading] = useState(false);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRow, setSelectedRow] = useState([]);
 
   const dispatch = useDispatch();
   const { products } = useSelector((state) => state.products);
@@ -39,31 +23,31 @@ export default function ProductsComponent() {
     dispatch(serverProductsGet());
   }, [loading]);
 
-  console.log(products);
-
-  const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-  const hasSelected = selectedRowKeys.length > 0;
-
-  const setLoadedHandler = (status) => {
-    setLoading(status);
-  };
-
   const deleteHandle = async () => {
-    setLoadedHandler(true);
-    selectedRowKeys.map(async (key) => {
-     await dispatch(serverProductDelete({ key, setLoading }));
+    setLoading(false);
+    selectedRow.map(async (delProd) => {
+      const currentProducts = products.filter((prod) => prod !== delProd);
+      await dispatch(
+        serverProductDelete({ currentProducts, key: delProd.key, setLoading })
+      );
+      return;
     });
-    setLoadedHandler(false);
-    setSelectedRowKeys([]);
-    
+    setSelectedRow([]);
+    setLoading(true);
   };
+
+  const rowSelection = {
+    onChange: (_, selectedRows) => {
+      setSelectedRow(selectedRows);
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === "Disabled User",
+      // Column configuration not to be checked
+      name: record.name,
+    }),
+  };
+
+  const hasSelected = selectedRow.length > 0;
 
   //MODAL
 
@@ -91,7 +75,7 @@ export default function ProductsComponent() {
           <Button
             danger
             onClick={() => {
-              deleteHandle(setLoadedHandler);
+              deleteHandle();
             }}
             disabled={!hasSelected}
             loading={loading}
@@ -105,7 +89,7 @@ export default function ProductsComponent() {
               marginLeft: 8,
             }}
           >
-            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
+            {hasSelected ? `Selected ${selectedRow.length} items` : ""}
           </span>
         </List.Item>
         <ProductCreateModal setOpen={setOpen} open={open} />

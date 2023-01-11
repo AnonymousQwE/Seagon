@@ -1,6 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import Parse from "parse/dist/parse.js";
 
+
+
 export const serverCurrentUser = createAsyncThunk(
   "currentUser/serverGetUser",
   async () => {

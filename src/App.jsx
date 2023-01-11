@@ -24,7 +24,6 @@ Parse.serverURL = PARSE_HOST_URL;
 
 const App = () => {
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state) => state.currentUser);
 
   useEffect(() => {
     dispatch(serverCurrentUser());

@@ -38,33 +38,35 @@ export const serverProductsGet = createAsyncThunk(
 
 export const serverProductCreate = createAsyncThunk(
   "products/serverProductCreate",
-  async ({ title, price, amount }, { rejectWithValue }) => {
+  async (product, { rejectWithValue }) => {
     let Product = new Parse.Object("Products");
-    Product.set("title", title);
-    Product.set("price", price);
-    Product.set("amount", amount);
+    Product.set("title", product.title);
+    Product.set("price", +product.price);
+    Product.set("amount", +product.amount);
     try {
       await Product.save();
-      const { title } = Product;
-      return { title };
+      product.key = Product.id;
+      product.id = Product.id;
+      return product;
     } catch (error) {
-      return rejectWithValue(alert);
+      return rejectWithValue(error);
     }
   }
 );
 
 export const serverProductDelete = createAsyncThunk(
   "products/serverProductDelete",
-  async ({ key, setLoading }, { rejectWithValue }) => {
+  async ({ currentProducts, key, setLoading }, { rejectWithValue }) => {
     const Product = new Parse.Object("Products");
     Product.set("objectId", key);
     try {
       await Product.destroy();
       setLoading(false);
-      return key;
+      return currentProducts;
     } catch (error) {
       setLoading(false);
-      return rejectWithValue(error);
+      console.log("Errod Delete Prod from Server:" + error);
+      // return rejectWithValue(error);
     }
   }
 );

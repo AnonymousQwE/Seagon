@@ -12,29 +12,34 @@ const productsSlice = createSlice({
     products: [],
     categoryList: [],
     status: "loading",
-    error: null,
-    completeMessage: null,
+    notify: {
+      error: null,
+      complete: null,
+    },
   },
   reducers: {
     clearError: (state) => {
-      state.error = null;
+      state.notify.error = null;
     },
     clearMessage: (state) => {
-      state.completeMessage = null;
+      state.notify.complete = null;
+    },
+    setProducts: (state, action) => {
+      state.products = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  _extraReducers: (builder) => {
     builder.addCase(serverProductCreate.pending, (state, action) => {
       state.status = "loading";
     });
     builder.addCase(serverProductCreate.fulfilled, (state, action) => {
-      state.completeMessage =
-        "New Product Title " + action.payload.title + " created";
+      state.notify.complete = "New Product CreateComplete ";
+      state.products.push(action.payload);
       state.status = "loaded";
     });
     builder.addCase(serverProductCreate.rejected, (state, action) => {
       state.status = "rejected";
-      state.error = action.payload;
+      state.notify.error = action.payload;
     });
 
     builder.addCase(serverProductsGet.pending, (state, action) => {
@@ -43,29 +48,36 @@ const productsSlice = createSlice({
     builder.addCase(serverProductsGet.fulfilled, (state, action) => {
       state.products = action.payload.products;
       state.categoryList = action.payload.categoryList;
-      state.completeMessage = "Products Loaded Complete";
+      state.notify.complete = "Products Loaded Complete";
       state.status = "loaded";
     });
     builder.addCase(serverProductsGet.rejected, (state, action) => {
       state.status = "rejected";
       console.log(action.payload);
-      // state.error = action.payload;
+      // state.notify.error = action.payload;
     });
 
     builder.addCase(serverProductDelete.pending, (state, action) => {
       state.status = "loading";
     });
     builder.addCase(serverProductDelete.fulfilled, (state, action) => {
-      state.completeMessage = "Products Deleted";
+      state.notify.complete = "Products Deleted";
+      state.products = action.payload;
       state.status = "loaded";
     });
     builder.addCase(serverProductDelete.rejected, (state, action) => {
       state.status = "rejected";
-      state.error = action.payload;
+      state.notify.error = action.payload;
     });
+  },
+  get extraReducers() {
+    return this._extraReducers;
+  },
+  set extraReducers(value) {
+    this._extraReducers = value;
   },
 });
 
-export const { clearError, clearMessage } = productsSlice.actions;
+export const { clearError, clearMessage, setProducts } = productsSlice.actions;
 
 export default productsSlice.reducer;
