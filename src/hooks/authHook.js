@@ -1,8 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import Parse from "parse/dist/parse.js";
 
-
-
 export const serverCurrentUser = createAsyncThunk(
   "currentUser/serverGetUser",
   async () => {
@@ -14,6 +12,7 @@ export const serverCurrentUser = createAsyncThunk(
           id: serverUser.id,
           isAdmin: serverUser.attributes.accessLevel === "admin" ? true : false,
         };
+        console.log(serverUser.attributes.accessLevel);
         return currentUser;
       }
     } catch (error) {
@@ -34,6 +33,7 @@ export const serverRegisterUser = createAsyncThunk(
       const currentUser = {
         username: serverUser.attributes.username,
         id: serverUser.id,
+        isAdmin: false,
       };
       return currentUser;
     } catch (error) {
@@ -53,10 +53,23 @@ export const serverLoginUser = createAsyncThunk(
       const currentUser = {
         username: serverUser.attributes.username,
         id: serverUser.id,
+        isAdmin: serverUser.attributes.accessLevel === "admin" ? true : false,
       };
       return currentUser;
     } catch (error) {
       return rejectWithValue(error.message);
+    }
+  }
+);
+export const serverLogoutUser = createAsyncThunk(
+  "currentUser/serverLogoutUser",
+  async () => {
+    try {
+      await Parse.User.logOut();
+      return null;
+    } catch (error) {
+      console.log(error);
+      // return error;
     }
   }
 );

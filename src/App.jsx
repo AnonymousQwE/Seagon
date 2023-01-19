@@ -19,23 +19,26 @@ import {
   PARSE_HOST_URL,
   PARSE_JAVASCRIPT_KEY,
 } from "./parseConfig";
+import Notify from "./components/Notify";
 Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
 Parse.serverURL = PARSE_HOST_URL;
 
 const App = () => {
   const dispatch = useDispatch();
 
+  const currentUser = useSelector((state) => state.currentUser.currentUser);
   useEffect(() => {
     dispatch(serverCurrentUser());
   }, []);
-
   return (
     <>
       <Layout>
         <Header />
+        <Notify />
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/setting" element={<SettingPage />} />
+
           <Route path="/admin/*" element={<AdminPage />} />
         </Routes>
       </Layout>

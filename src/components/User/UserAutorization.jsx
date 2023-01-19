@@ -4,13 +4,14 @@ import { Button, Form, Input } from "antd";
 
 import { useDispatch } from "react-redux";
 
-import { serverLoginUser } from "../../hooks/authHook";
+import { serverCurrentUser, serverLoginUser } from "../../hooks/authHook";
 
 export default function UserAutorization() {
   const dispatch = useDispatch();
 
   const onFinish = (values) => {
     dispatch(serverLoginUser(values));
+    dispatch(serverCurrentUser());
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);

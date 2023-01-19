@@ -24,20 +24,23 @@ const AdminTable = ({ products, rowSelection }) => {
       dataIndex: "title",
       key: "title",
       sorter: true,
+      sorter: {
+        compare: (a, b) => a.title.localeCompare(b.title),
+        multiple: 3,
+      },
+      defaultSortOrder: "ascend",
     },
     {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
-      sorter: (a, b) => a.amount - b.amount,
-      defaultSortOrder: "descend",
+      sorter: { compare: (a, b) => a.amount - b.amount, multiple: 2 },
     },
     {
       title: "Price",
       dataIndex: "price",
       key: "price",
-      sorter: (a, b) => a.price - b.price,
-      defaultSortOrder: "descend",
+      sorter: { compare: (a, b) => a.price - b.price, multiple: 1 },
     },
     {
       title: "Category",

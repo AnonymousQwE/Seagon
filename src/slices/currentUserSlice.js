@@ -1,10 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import Parse from "parse/dist/parse.js";
-
 import {
   serverCurrentUser,
   serverLoginUser,
+  serverLogoutUser,
   serverRegisterUser,
 } from "../hooks/authHook";
 
@@ -13,22 +12,15 @@ const currentUserSlice = createSlice({
   initialState: {
     CurrentUser: {},
     status: null,
-    notify: {
-    },
+    notify: {},
   },
   reducers: {
-    serverLogoutUser: (state) => {
-      Parse.User.logOut();
-      state.currentUser = null;
-      state.status = "loaded";
-      state.notify.complete = "LogOut Complete";
-    },
     clearNotify: (state) => {
       state.notify = {};
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(serverLoginUser.pending, (state, action) => {
+    builder.addCase(serverLoginUser.pending, (state) => {
       state.status = "loading";
     });
     builder.addCase(serverLoginUser.fulfilled, (state, action) => {
@@ -67,9 +59,22 @@ const currentUserSlice = createSlice({
       state.status = "rejected";
       state.notify.error = action.payload;
     });
+
+    builder.addCase(serverLogoutUser.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(serverLogoutUser.fulfilled, (state, action) => {
+      state.currentUser = action.payload;
+      state.notify.complete = "LogOut Complete! Good Bye";
+      state.status = "loaded";
+    });
+    builder.addCase(serverLogoutUser.rejected, (state, action) => {
+      state.status = "rejected";
+      state.notify.error = action.payload;
+    });
   },
 });
 
-export const { serverLogoutUser, clearNotify } = currentUserSlice.actions;
+export const { clearNotify } = currentUserSlice.actions;
 
 export default currentUserSlice.reducer;

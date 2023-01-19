@@ -71,7 +71,7 @@ export default function ProductCreateModal({ open, setOpen }) {
                     <Form.Item {...restField} name={[name, "amount"]}>
                       <Input type="number" placeholder="Amount" />
                     </Form.Item>
-                    <Form.Item initialValue={categoryList[0].id}
+                    <Form.Item initialValue={categoryList[0]?.id}
                       rules={[
                         {
                           required: true,
