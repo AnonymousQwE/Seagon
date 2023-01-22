@@ -1,11 +1,10 @@
 import CustomNavLink from "./CustomNavLink";
 import "../../styles/header.css";
+import { useDispatch } from "react-redux";
+
+const adminNavItem = ["Products", "Categories", "Users"];
 
 export function createNavItem() {
-  // type: 'group', // Must have
-  // label: 'My Group',
-  // children: [],
-
   const NavItem = ["Seagon", "Setting", "Admin"].map((key, i) =>
     i === 0
       ? {
@@ -33,7 +32,7 @@ export function createNavItem() {
   return NavItem;
 }
 export function createAdminNavItem() {
-  return ["Products", "Categories", "Users"].map((key) => ({
+  return adminNavItem.map((key) => ({
     key: key.toLowerCase(),
     label: (
       <CustomNavLink label={key} to={key.toLowerCase()}>

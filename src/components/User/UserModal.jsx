@@ -8,19 +8,20 @@ import UserAutorization from "./UserAutorization";
 import UserRegistration from "./UserRegistration";
 import UserProfile from "./UserProfile";
 import { serverLogoutUser } from "../../hooks/authHook";
+import { logoutUser } from "../../hooks/userHook";
 
 export default function UserModal({ onClose, open }) {
   const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.currentUser.currentUser);
+  const currentUser = useSelector((state) => state.user.user);
 
   const [modalType, setModalType] = useState("Login");
 
   const userLogOutHandler = () => {
-    dispatch(serverLogoutUser());
+    dispatch(logoutUser());
   };
 
   useEffect(() => {
-    currentUser ? setModalType("UserPanel") : setModalType("Login");
+    currentUser?.email ? setModalType("UserPanel") : setModalType("Login");
   }, [currentUser]);
 
   return (
@@ -38,15 +39,15 @@ export default function UserModal({ onClose, open }) {
                 modalType === "Login"
                   ? setModalType("Registration")
                   : modalType === "Registration"
-                    ? setModalType("Login")
-                    : userLogOutHandler();
+                  ? setModalType("Login")
+                  : userLogOutHandler();
               }}
             >
               {modalType === "Login"
                 ? "Registration"
                 : modalType === "Registration"
-                  ? "Login"
-                  : "LogOut"}
+                ? "Login"
+                : "LogOut"}
             </Button>
           </Space>
         }

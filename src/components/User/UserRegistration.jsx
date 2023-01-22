@@ -3,14 +3,13 @@ import React from "react";
 import { Button, Form, Input } from "antd";
 
 import { useDispatch } from "react-redux";
-
-import { serverRegisterUser } from "../../hooks/authHook";
+import { registerUser } from "../../hooks/userHook";
 
 export default function UserRegistration() {
   const dispatch = useDispatch();
 
   const onFinish = (values) => {
-    dispatch(serverRegisterUser(values));
+    dispatch(registerUser(values));
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -34,12 +33,12 @@ export default function UserRegistration() {
         autoComplete="off"
       >
         <Form.Item
-          label="Username"
-          name="username"
+          label="Полное Имя"
+          name="fullname"
           rules={[
             {
               required: true,
-              message: "Please input your username!",
+              message: "Пожалуйста введите Ваше имя!",
             },
           ]}
         >
@@ -51,7 +50,7 @@ export default function UserRegistration() {
           rules={[
             {
               required: true,
-              message: "Please input your email!",
+              message: "Пожалуйста введите Ваш email!",
             },
           ]}
         >
@@ -59,12 +58,12 @@ export default function UserRegistration() {
         </Form.Item>
 
         <Form.Item
-          label="Password"
+          label="Пароль"
           name="password"
           rules={[
             {
               required: true,
-              message: "Please input your password!",
+              message: "Пожалуйста введите Ваш пароль!",
             },
           ]}
         >

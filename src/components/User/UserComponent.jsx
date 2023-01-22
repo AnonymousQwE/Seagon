@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-import { Avatar, message } from "antd";
+import { Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
-import { useDispatch, useSelector } from "react-redux";
-import { clearNotify } from "../../slices/currentUserSlice";
+import { useSelector } from "react-redux";
 
 import UserModal from "./UserModal";
 
 export default function UserComponent() {
-  const { currentUser } = useSelector((state) => state.currentUser);
+  const currentUser = useSelector((state) => state.user.user);
 
   const [open, setOpen] = useState(false);
   const showUserModal = () => {
@@ -19,11 +18,10 @@ export default function UserComponent() {
   const onClose = () => {
     setOpen(false);
   };
-
   return (
     <>
       <Avatar onClick={showUserModal} size={50} className="headerUserIcon">
-        {currentUser ? currentUser.username : <UserOutlined />}
+        {currentUser ? currentUser.displayName : <UserOutlined />}
       </Avatar>
       <UserModal open={open} onClose={onClose} />
     </>

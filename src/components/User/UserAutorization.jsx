@@ -4,14 +4,13 @@ import { Button, Form, Input } from "antd";
 
 import { useDispatch } from "react-redux";
 
-import { serverCurrentUser, serverLoginUser } from "../../hooks/authHook";
+import { loginUser } from "../../hooks/userHook";
 
 export default function UserAutorization() {
   const dispatch = useDispatch();
 
   const onFinish = (values) => {
-    dispatch(serverLoginUser(values));
-    dispatch(serverCurrentUser());
+    dispatch(loginUser(values));
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -33,12 +32,12 @@ export default function UserAutorization() {
       autoComplete="off"
     >
       <Form.Item
-        label="Username"
-        name="username"
+        label="Email"
+        name="email"
         rules={[
           {
             required: true,
-            message: "Please input your username!",
+            message: "Пожалуйста введите свой Email",
           },
         ]}
       >
@@ -51,7 +50,7 @@ export default function UserAutorization() {
         rules={[
           {
             required: true,
-            message: "Please input your password!",
+            message: "Пожалуйста введите свой пароль",
           },
         ]}
       >

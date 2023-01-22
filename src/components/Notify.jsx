@@ -1,11 +1,11 @@
 import { message } from "antd";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { clearNotify } from "../slices/currentUserSlice";
+import { clearNotify } from "../slices/userSlice";
 
 export default function Notify() {
   const dispatch = useDispatch();
-  const { notify, status } = useSelector((state) => state.currentUser);
+  const { notify, status } = useSelector((state) => state.user);
   const [messageApi, contextHolder] = message.useMessage();
 
   function statusChangedHandler(data) {
@@ -23,7 +23,6 @@ export default function Notify() {
 
   useEffect(() => {
     statusChangedHandler(notify);
-    console.log("NOTIFY", notify);
   }, [notify]);
   return <>{contextHolder}</>;
 }

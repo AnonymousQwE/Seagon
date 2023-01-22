@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Breadcrumb, Layout, theme } from "antd";
+import { Layout, theme } from "antd";
 import { Content } from "antd/es/layout/layout";
 
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -8,7 +8,6 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import ProductsComponent from "../components/Admin/ProductsTab/ProductsComponent";
 import AdminMenu from "../components/Admin/AdminMenu";
 import UsersComponent from "../components/Admin/UsersTab/UsersComponent";
-import Typography from "antd/es/typography/Typography";
 
 export default function AdminPage() {
   const {
