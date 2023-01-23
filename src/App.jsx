@@ -20,20 +20,27 @@ import {
 } from "./parseConfig";
 import Notify from "./components/Notify";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase";
+import { auth, db } from "./firebase";
 import { serverUser } from "./hooks/userHook";
 import { setUser } from "./slices/userSlice";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import Loader from "./components/Loader";
 Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
 Parse.serverURL = PARSE_HOST_URL;
 
 const App = () => {
   const dispatch = useDispatch();
 
-  const currentUser = useSelector((state) => state.user);
-  const { notify } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
+
+  const getData = async () => {};
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
+    getData();
+  }, [user]);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
       if (user) {
         dispatch(
           setUser({

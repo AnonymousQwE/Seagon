@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 
 import { loginUser } from "../../hooks/userHook";
 
-export default function UserAutorization() {
+export default function UserLogin() {
   const dispatch = useDispatch();
 
   const onFinish = (values) => {

@@ -23,6 +23,9 @@ export default function UserComponent() {
       <Avatar onClick={showUserModal} size={50} className="headerUserIcon">
         {currentUser ? currentUser.displayName : <UserOutlined />}
       </Avatar>
+      
+      
+      
       <UserModal open={open} onClose={onClose} />
     </>
   );

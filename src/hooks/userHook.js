@@ -1,48 +1,16 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   createUserWithEmailAndPassword,
-  onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { auth } from "../firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
 
-export const serverUser = createAsyncThunk(
-  "user/serverUser",
-  async ({}, { rejectWithValue }) => {
-    console.log("serverUser");
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        serverUser = {
-          id: user.uid,
-          email: user.email,
-          displayName: user.providerData[0].displayName,
-          photoURL: user.providerData[0].photoURL,
-        };
-      } else {
-        serverUser = {};
-      }
-      return serverUser;
-    });
-  }
-);
-
-export const registerUser = createAsyncThunk(
-  "user/registerUser",
-  async ({ password, email }, { rejectWithValue }) => {
+export const getUserData = createAsyncThunk(
+  "user/getUserData",
+  async ({ userId }, { rejectWithValue }) => {
     try {
-      return await createUserWithEmailAndPassword(auth, email, password).then(
-        (userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          return {
-            id: user.uid,
-            email: user.email,
-            displayName: user.providerData.displayName,
-            photoURL: user.providerData.photoURL,
-          };
-        }
-      );
     } catch (error) {
       let errorData;
       switch (error.code) {
@@ -62,25 +30,77 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-export const loginUser = createAsyncThunk(
-  "user/serverLoginUser",
-  async ({ email, password }, { rejectWithValue }) => {
+export const registerUser = createAsyncThunk(
+  "user/registerUser",
+  async ({ password, email }, { rejectWithValue }) => {
     try {
-      return await signInWithEmailAndPassword(auth, email, password).then(
-        (userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          return {
-            id: user.uid,
-            email: user.email,
-            displayName: user.providerData[0].displayName,
-            photoURL: user.providerData[0].photoURL,
-          };
-        }
-      );
+      const data = {
+        role: "user",
+      };
+
+      const user = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      ).then((userCredential) => {
+        // Signed in
+        const serverUser = userCredential.user;
+        return {
+          id: serverUser.uid,
+          email: serverUser.email,
+          displayName: serverUser.providerData.displayName,
+          photoURL: serverUser.providerData.photoURL,
+        };
+      });
+
+      await setDoc(doc(db, "users", user.id), data);
+
+      return { ...user, ...data };
     } catch (error) {
       let errorData;
       console.log(error);
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          errorData = "Этот email уже используется в системе!";
+          break;
+        case "auth/weak-password":
+          errorData = "Пароль слишком лёгкий. Не менее 6 символов";
+          break;
+
+        default:
+          errorData = "Неизвестная ошибка. Обратитесь к администратору!";
+          break;
+      }
+      return rejectWithValue(errorData);
+    }
+  }
+);
+
+export const loginUser = createAsyncThunk(
+  "user/loginUser",
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const user = await signInWithEmailAndPassword(auth, email, password).then(
+        (userCredential) => {
+          // Signed in
+          const serverUser = userCredential.user;
+          return {
+            id: serverUser.uid,
+            email: serverUser.email,
+            displayName: serverUser.providerData[0].displayName,
+            photoURL: serverUser.providerData[0].photoURL,
+          };
+        }
+      );
+
+      const userData = await getDoc(doc(db, "users", user.id));
+      if (userData.exists()) {
+        return { ...user, ...userData.data() };
+      }
+
+      return user;
+    } catch (error) {
+      let errorData;
       switch (error.code) {
         case "auth/user-not-found":
           errorData =

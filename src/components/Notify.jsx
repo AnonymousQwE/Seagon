@@ -8,21 +8,13 @@ export default function Notify() {
   const { notify, status } = useSelector((state) => state.user);
   const [messageApi, contextHolder] = message.useMessage();
 
-  function statusChangedHandler(data) {
-    const errorNotify = { type: "error", content: data?.error };
-    const successNotify = { type: "success", content: data?.complete };
-
-    if (data.error) {
-      messageApi.open(errorNotify);
-      dispatch(clearNotify());
-    } else if (data.complete) {
-      messageApi.open(successNotify);
-      dispatch(clearNotify());
-    }
-  }
+  function showMessageHandler() {}
 
   useEffect(() => {
-    statusChangedHandler(notify);
-  }, [notify]);
+    for (let i = 0; i < notify.length; i++) {
+      messageApi.open(notify[i]);
+    }
+    dispatch(clearNotify());
+  }, [status]);
   return <>{contextHolder}</>;
 }

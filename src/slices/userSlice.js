@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  getUserData,
   loginUser,
   logoutUser,
   registerUser,
@@ -11,28 +12,43 @@ const userSlice = createSlice({
   initialState: {
     user: {},
     status: null,
-    notify: {},
+    notify: [],
   },
   reducers: {
     clearNotify: (state) => {
-      state.notify = {};
+      state.notify = [];
     },
     setUser: (state, action) => {
       state.user = action.payload;
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(getUserData.pending, (state) => {
+      state.status = "loading";
+    });
+    builder.addCase(getUserData.fulfilled, (state, action) => {
+      state.user += action.payload;
+      state.status = "loaded";
+    });
+    builder.addCase(getUserData.rejected, (state, action) => {
+      state.status = "rejected";
+      state.notify.push({ type: "error", content: action.payload });
+    });
+
     builder.addCase(loginUser.pending, (state) => {
       state.status = "loading";
     });
     builder.addCase(loginUser.fulfilled, (state, action) => {
       state.user = action.payload;
-      state.notify.complete = "Вы успешно авторизовались! Добро пожаловать!";
+      state.notify.push({
+        type: "success",
+        content: "Вы успешно авторизовались! Добро пожаловать!",
+      });
       state.status = "loaded";
     });
     builder.addCase(loginUser.rejected, (state, action) => {
+      state.notify.push({ type: "error", content: action.payload });
       state.status = "rejected";
-      state.notify.error = action.payload;
     });
 
     builder.addCase(registerUser.pending, (state, action) => {
@@ -40,26 +56,14 @@ const userSlice = createSlice({
     });
     builder.addCase(registerUser.fulfilled, (state, action) => {
       state.user = action.payload;
-      state.notify.complete = "Вы успешно зарегистрировались!";
+      state.notify.push({
+        type: "success",
+        content: "Вы успешно зарегистрировались!",
+      });
       state.status = "loaded";
     });
     builder.addCase(registerUser.rejected, (state, action) => {
-      state.notify.error = action.payload;
-      state.status = "rejected";
-    });
-
-    builder.addCase(serverUser.pending, (state, action) => {
-      console.log("serverUserPENDING");
-      state.status = "loading";
-    });
-    builder.addCase(serverUser.fulfilled, (state, action) => {
-      console.log("serverUserFULLFILED");
-      // state.user = action.payload;
-      state.status = "loaded";
-    });
-    builder.addCase(serverUser.rejected, (state, action) => {
-      console.log("serverUserREJECT");
-      state.notify.error = action.payload;
+      state.notify.push({ type: "error", content: action.payload });
       state.status = "rejected";
     });
 
@@ -68,12 +72,15 @@ const userSlice = createSlice({
     });
     builder.addCase(logoutUser.fulfilled, (state) => {
       state.user = {};
-      state.notify.complete = "Вы успешно вышли из системы. До свидания!";
+      state.notify.push({
+        type: "success",
+        content: "Вы успешно вышли из системы. До свидания!",
+      });
       state.status = "loaded";
     });
     builder.addCase(logoutUser.rejected, (state, action) => {
       state.status = "rejected";
-      state.notify.error = action.payload;
+      state.notify.push({ type: "error", content: action.payload });
     });
   },
 });
