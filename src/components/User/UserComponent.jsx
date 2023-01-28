@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import UserModal from "./UserModal";
 
 export default function UserComponent() {
-  const currentUser = useSelector((state) => state.user.user);
+  const { user } = useSelector((state) => state.user);
 
   const [open, setOpen] = useState(false);
   const showUserModal = () => {
@@ -21,11 +21,9 @@ export default function UserComponent() {
   return (
     <>
       <Avatar onClick={showUserModal} size={50} className="headerUserIcon">
-        {currentUser ? currentUser.displayName : <UserOutlined />}
+        {user.displayName || <UserOutlined />}
       </Avatar>
-      
-      
-      
+
       <UserModal open={open} onClose={onClose} />
     </>
   );

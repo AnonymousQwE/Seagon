@@ -1,8 +1,11 @@
+.header {
+  max-height: 8vh;
+}
 .headerMenu {
   /* padding: 4px; */
   align-items: center;
-  justify-content: center;
-  max-height: 1rem;
+  width: 100%;
+  height: 5vh;
 }
 
 .ant-menu-title-content {
@@ -13,6 +16,9 @@
 .headerNavItem {
   height: 1rem;
   font-size: 20px;
+}
+.headerLogo.active {
+  color: #0958d9 !important;
 }
 
 .headerLogo {
@@ -28,5 +34,17 @@
   background-color: white;
   color: rgba(0, 0, 0, 0.88);
   font-weight: bold;
+}
 
+@media (max-width: 450px) {
+  .headerMenu {
+    align-items: center;
+    width: 30%;
+    max-height: 1rem;
+    margin: 0;
+  }
+  .headerUserIcon {
+    width: 30px;
+    height: 30px;
+  }
 }

@@ -1,42 +1,54 @@
 import CustomNavLink from "./CustomNavLink";
 import "../../styles/header.css";
-import { useDispatch } from "react-redux";
 
-const adminNavItem = ["Products", "Categories", "Users"];
+const adminNavItem = [
+  { title: "Products", link: "products" },
+  { title: "Categories", link: "categories" },
+  { title: "Users", link: "users" },
+];
+const authNavItem = [
+  { title: "Seagon", link: "/", class: "headerLogo" },
+  { title: "Setting", link: "setting" },
+  { title: "Admin", link: "admin" },
+  { title: "About", link: "about" },
+];
+const navItem = [{ title: "Seagon", link: "/", class: "headerLogo" }];
 
+export function createAuthNavItem() {
+  return authNavItem.map((item, i) => ({
+    key: item.title.toLowerCase(),
+    label: (
+      <CustomNavLink
+        className={item.class ? item.class : "headerNavItem"}
+        label={item.title}
+        to={item.link}
+      >
+        {item.title}
+      </CustomNavLink>
+    ),
+  }));
+}
 export function createNavItem() {
-  const NavItem = ["Seagon", "Setting", "Admin"].map((key, i) =>
-    i === 0
-      ? {
-          key,
-          label: (
-            <CustomNavLink className={"headerLogo"} label={key} to="/">
-              {key}
-            </CustomNavLink>
-          ),
-        }
-      : {
-          key: key.toLowerCase(),
-          label: (
-            <CustomNavLink
-              label={key}
-              className={"headerNavItem"}
-              to={key === "SEAGON" ? "/" : "/" + key.toLowerCase()}
-            >
-              {key}
-            </CustomNavLink>
-          ),
-        }
-  );
-
-  return NavItem;
+  return navItem.map((item, i) => ({
+    key: item.title.toLowerCase(),
+    label: (
+      <CustomNavLink
+        inlineIndent={10}
+        className={item.class ? item.class : "headerNavItem"}
+        label={item.title}
+        to={item.link}
+      >
+        {item.title}
+      </CustomNavLink>
+    ),
+  }));
 }
 export function createAdminNavItem() {
-  return adminNavItem.map((key) => ({
-    key: key.toLowerCase(),
+  return adminNavItem.map((item) => ({
+    key: item.title,
     label: (
-      <CustomNavLink label={key} to={key.toLowerCase()}>
-        {key}
+      <CustomNavLink label={item.title} to={item.link}>
+        {item.title}
       </CustomNavLink>
     ),
   }));

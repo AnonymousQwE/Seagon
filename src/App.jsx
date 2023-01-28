@@ -20,11 +20,11 @@ import {
 } from "./parseConfig";
 import Notify from "./components/Notify";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, db } from "./firebase";
-import { serverUser } from "./hooks/userHook";
+import { auth } from "./firebase";
 import { setUser } from "./slices/userSlice";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
-import Loader from "./components/Loader";
+import Cart from "./components/Cart/Cart";
+import AuthPage from "./pages/AuthPage";
+
 Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
 Parse.serverURL = PARSE_HOST_URL;
 
@@ -58,14 +58,22 @@ const App = () => {
   }, [dispatch]);
   return (
     <>
+      <Notify />
       <Layout>
+      </Layout>
+      <Layout
+        style={{
+          minHeight: "100vh",
+        }}
+      >
         <Header />
-        <Notify />
+
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/setting" element={<SettingPage />} />
-
           <Route path="/admin/*" element={<AdminPage />} />
+          <Route path="/auth" element={<AuthPage />} />
+
         </Routes>
       </Layout>
     </>
