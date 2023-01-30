@@ -4,7 +4,7 @@ import UserRegistration from "../components/User/UserRegistration";
 export default function AuthPage() {
   return (
     <>
-      <Box><UserRegistration /></Box>
+      <UserRegistration />
     </>
   );
 }
